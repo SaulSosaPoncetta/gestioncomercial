@@ -13,6 +13,7 @@ use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CompraController;
+use App\Http\Controllers\VentaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,6 +46,11 @@ Route::middleware('auth')->group(function () {
     Route::get('compras/crear', [CompraController::class, 'create'])->name('compras.create');
     Route::post('compras', [CompraController::class, 'store'])->name('compras.store');
     Route::get('compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
+    Route::get('ventas', [VentaController::class, 'index'])->name('ventas.index');
+    Route::get('ventas/crear', [VentaController::class, 'create'])->name('ventas.create');
+    Route::post('ventas', [VentaController::class, 'store'])->name('ventas.store');
+    Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
+    Route::get('ventas-ajax/precios-por-lista', [VentaController::class, 'preciosPorLista'])->name('ventas.preciosPorLista');
 
 });
 
