@@ -12,6 +12,7 @@ use App\Http\Controllers\ListaPrecioController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\CompraController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,6 +41,10 @@ Route::middleware('auth')->group(function () {
     Route::get('stock/ajustar', [StockController::class, 'ajustar'])->name('stock.ajustar');
     Route::post('stock/ajustar', [StockController::class, 'guardarAjuste'])->name('stock.guardarAjuste');
     Route::get('stock/historial', [StockController::class, 'historial'])->name('stock.historial');
+    Route::get('compras', [CompraController::class, 'index'])->name('compras.index');
+    Route::get('compras/crear', [CompraController::class, 'create'])->name('compras.create');
+    Route::post('compras', [CompraController::class, 'store'])->name('compras.store');
+    Route::get('compras/{compra}', [CompraController::class, 'show'])->name('compras.show');
 
 });
 
