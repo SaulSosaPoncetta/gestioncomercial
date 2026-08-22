@@ -9,6 +9,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ListaPrecioController;
+use App\Http\Controllers\PersonaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,7 +32,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('listas-precios', ListaPrecioController::class);
     Route::get('listas-precios/{listas_precio}/precios', [ListaPrecioController::class, 'precios'])->name('listas-precios.precios');
     Route::post('listas-precios/{listas_precio}/precios', [ListaPrecioController::class, 'guardarPrecios'])->name('listas-precios.guardarPrecios');
-    
+    Route::resource('personas', PersonaController::class);
 });
 
 require __DIR__.'/auth.php';
