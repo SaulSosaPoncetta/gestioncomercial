@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\ListaPrecioController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\AlmacenController;
+use App\Http\Controllers\StockController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -35,6 +36,10 @@ Route::middleware('auth')->group(function () {
     Route::post('listas-precios/{listas_precio}/precios', [ListaPrecioController::class, 'guardarPrecios'])->name('listas-precios.guardarPrecios');
     Route::resource('personas', PersonaController::class);
     Route::resource('almacenes', AlmacenController::class);
+    Route::get('stock', [StockController::class, 'index'])->name('stock.index');
+    Route::get('stock/ajustar', [StockController::class, 'ajustar'])->name('stock.ajustar');
+    Route::post('stock/ajustar', [StockController::class, 'guardarAjuste'])->name('stock.guardarAjuste');
+    Route::get('stock/historial', [StockController::class, 'historial'])->name('stock.historial');
 
 });
 
