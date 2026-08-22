@@ -1,68 +1,32 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Empresa;
-use App\Models\Sucursal;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 
-class SucursalController extends Controller
+class Sucursal extends Model
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    protected $table = 'sucursales';
+    protected $primaryKey = 'id_sucursal';
+    public $timestamps = false;
 
-    public function index()
-    {
-        $sucursales = Sucursal::with('empresa')->orderBy('nombre')->paginate(10);
-        return view('sucursales.index', compact('sucursales'));
-    }
+    protected $fillable = [
+        'id_empresa',
+        'nombre',
+        'codigo',
+        'direccion',
+        'telefono',
+        'es_casa_matriz',
+        'estado',
+    ];
 
-    public function create()
-    {
-        $empresas = Empresa::orderBy('razon_social')->get();
-        return view('sucursales.create', compact('empresas'));
-    }
+    protected $casts = [
+        'es_casa_matriz' => 'boolean',
+        'estado' => 'boolean',
+    ];
 
-    public function store(Request $request)
+    public function empresa()
     {
-        $data = $this->validarDatos($request);
-        $data['es_casa_matriz'] = $request->boolean('es_casa_matriz');
-        $data['estado'] = $request->boolean('estado', true);
-        Sucursal::create($data);
-        return redirect()->route('sucursales.index')->with('success', 'Sucursal creada correctamente.');
-    }
-
-    public function edit(Sucursal $sucursale)
-    {
-        $empresas = Empresa::orderBy('razon_social')->get();
-        return view('sucursales.edit', ['sucursal' => $sucursale, 'empresas' => $empresas]);
-    }
-
-    public function update(Request $request, Sucursal $sucursale)
-    {
-        $data = $this->validarDatos($request, $sucursale->id_sucursal);
-        $data['es_casa_matriz'] = $request->boolean('es_casa_matriz');
-        $data['estado'] = $request->boolean('estado', true);
-        $sucursale->update($data);
-        return redirect()->route('sucursales.index')->with('success', 'Sucursal actualizada correctamente.');
-    }
-
-    public function destroy(Sucursal $sucursale)
-    {
-        $sucursale->delete();
-        return redirect()->route('sucursales.index')->with('success', 'Sucursal eliminada correctamente.');
-    }
-
-    private function validarDatos(Request $request, $idSucursal = null)
-    {
-        return $request->validate([
-            'id_empresa' => 'required|exists:empresas,id_empresa',
-            'nombre' => 'required|string|max:100',
-            'codigo' => 'required|string|max:10|unique:sucursales,codigo,' . $idSucursal . ',id_sucursal',
-            'direccion' => 'nullable|string',
-            'telefono' => 'nullable|string|max:30',
-        ]);
+        return $this->belongsTo(Empresa::class, 'id_empresa', 'id_empresa');
     }
 }

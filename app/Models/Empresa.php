@@ -1,62 +1,26 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use App\Models\Empresa;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 
-class EmpresaController extends Controller
+class Empresa extends Model
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    protected $table = 'empresas';
+    protected $primaryKey = 'id_empresa';
+    public $timestamps = false;
 
-    public function index()
-    {
-        $empresas = Empresa::orderBy('razon_social')->paginate(10);
-        return view('empresas.index', compact('empresas'));
-    }
+    protected $fillable = [
+        'razon_social',
+        'nombre_fantasia',
+        'identificacion_fiscal',
+        'direccion',
+        'telefono',
+        'email',
+    ];
 
-    public function create()
+    public function sucursales()
     {
-        return view('empresas.create');
-    }
-
-    public function store(Request $request)
-    {
-        $data = $this->validarDatos($request);
-        Empresa::create($data);
-        return redirect()->route('empresas.index')->with('success', 'Empresa creada correctamente.');
-    }
-
-    public function edit(Empresa $empresa)
-    {
-        return view('empresas.edit', compact('empresa'));
-    }
-
-    public function update(Request $request, Empresa $empresa)
-    {
-        $data = $this->validarDatos($request, $empresa->id_empresa);
-        $empresa->update($data);
-        return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente.');
-    }
-
-    public function destroy(Empresa $empresa)
-    {
-        $empresa->delete();
-        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada correctamente.');
-    }
-
-    private function validarDatos(Request $request, $idEmpresa = null)
-    {
-        return $request->validate([
-            'razon_social' => 'required|string|max:150',
-            'nombre_fantasia' => 'nullable|string|max:150',
-            'identificacion_fiscal' => 'required|string|max:20|unique:empresas,identificacion_fiscal,' . $idEmpresa . ',id_empresa',
-            'direccion' => 'nullable|string',
-            'telefono' => 'nullable|string|max:30',
-            'email' => 'nullable|email|max:100',
-        ]);
+        return $this->hasMany(Sucursal::class, 'id_empresa', 'id_empresa');
     }
 }
