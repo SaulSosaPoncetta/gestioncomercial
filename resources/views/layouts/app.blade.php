@@ -57,6 +57,20 @@
                 <span class="fs-5 fw-semibold">Gestión Comercial</span>
             </a>
 
+            <div class="nav-header">Compras y Ventas</div>
+            @if (Route::has('compras.index'))
+                <a class="nav-link {{ request()->is('compras*') ? 'active' : '' }}"
+                    href="{{ route('compras.index') }}"><i class="bi bi-cart-plus me-2"></i> Compras</a>
+            @endif
+            @if (Route::has('ventas.index'))
+                <a class="nav-link {{ request()->is('ventas*') ? 'active' : '' }}" href="{{ route('ventas.index') }}"><i
+                        class="bi bi-cart-check me-2"></i> Ventas</a>
+            @endif
+            @if (Route::has('cajas.index'))
+                <a class="nav-link {{ request()->is('cajas*') ? 'active' : '' }}" href="{{ route('cajas.index') }}"><i
+                        class="bi bi-cash-stack me-2"></i> Cajas</a>
+            @endif
+
             <div class="nav-header">Panel</div>
             <a class="nav-link {{ request()->is('home') ? 'active' : '' }}" href="{{ route('dashboard') }}">
                 <i class="bi bi-speedometer2 me-2"></i> Dashboard
@@ -68,8 +82,8 @@
                     href="{{ route('categorias.index') }}"><i class="bi bi-diagram-3 me-2"></i> Categorías</a>
             @endif
             @if (Route::has('marcas.index'))
-                <a class="nav-link {{ request()->is('marcas*') ? 'active' : '' }}" href="{{ route('marcas.index') }}"><i
-                        class="bi bi-tags me-2"></i> Marcas</a>
+                <a class="nav-link {{ request()->is('marcas*') ? 'active' : '' }}"
+                    href="{{ route('marcas.index') }}"><i class="bi bi-tags me-2"></i> Marcas</a>
             @endif
             @if (Route::has('productos.index'))
                 <a class="nav-link {{ request()->is('productos*') ? 'active' : '' }}"
@@ -96,6 +110,7 @@
                 <a class="nav-link {{ request()->is('stock*') ? 'active' : '' }}" href="{{ route('stock.index') }}"><i
                         class="bi bi-boxes me-2"></i> Stock</a>
             @endif
+
 
             <div class="nav-header">Configuración</div>
             @if (Route::has('empresas.index'))
