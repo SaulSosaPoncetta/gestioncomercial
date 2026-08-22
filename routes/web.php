@@ -14,6 +14,7 @@ use App\Http\Controllers\AlmacenController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\VentaController;
+use App\Http\Controllers\CajaChicaController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,6 +52,13 @@ Route::middleware('auth')->group(function () {
     Route::post('ventas', [VentaController::class, 'store'])->name('ventas.store');
     Route::get('ventas/{venta}', [VentaController::class, 'show'])->name('ventas.show');
     Route::get('ventas-ajax/precios-por-lista', [VentaController::class, 'preciosPorLista'])->name('ventas.preciosPorLista');
+    Route::resource('cajas', CajaChicaController::class)->except(['show']);
+    Route::get('cajas/{caja}/abrir', [CajaChicaController::class, 'abrir'])->name('cajas.abrir');
+    Route::post('cajas/{caja}/abrir', [CajaChicaController::class, 'guardarApertura'])->name('cajas.guardarApertura');
+    Route::get('cajas-sesion/{sesion}', [CajaChicaController::class, 'sesion'])->name('cajas.sesion');
+    Route::post('cajas-sesion/{sesion}/movimiento', [CajaChicaController::class, 'guardarMovimiento'])->name('cajas.guardarMovimiento');
+    Route::get('cajas-sesion/{sesion}/cerrar', [CajaChicaController::class, 'formularioCierre'])->name('cajas.formularioCierre');
+    Route::post('cajas-sesion/{sesion}/cerrar', [CajaChicaController::class, 'guardarCierre'])->name('cajas.guardarCierre');
 
 });
 
