@@ -15,6 +15,8 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\CompraController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CajaChicaController;
+use App\Http\Controllers\NotaCreditoVentaController;
+use App\Http\Controllers\NotaCreditoCompraController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,10 +29,12 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware('auth')->group(function () {
     
+Route::middleware('permission:gestionar-configuracion')->group(function () {
     Route::resource('empresas', EmpresaController::class);
     Route::resource('sucursales', SucursalController::class);
     Route::resource('impuestos', ImpuestoController::class);
     Route::resource('monedas', MonedaController::class);
+});
     Route::resource('categorias', CategoriaController::class);
     Route::resource('marcas', MarcaController::class);
     Route::resource('productos', ProductoController::class);
@@ -59,7 +63,19 @@ Route::middleware('auth')->group(function () {
     Route::post('cajas-sesion/{sesion}/movimiento', [CajaChicaController::class, 'guardarMovimiento'])->name('cajas.guardarMovimiento');
     Route::get('cajas-sesion/{sesion}/cerrar', [CajaChicaController::class, 'formularioCierre'])->name('cajas.formularioCierre');
     Route::post('cajas-sesion/{sesion}/cerrar', [CajaChicaController::class, 'guardarCierre'])->name('cajas.guardarCierre');
-
+    Route::get('notas-credito-venta', [NotaCreditoVentaController::class, 'index'])->name('notas-credito-venta.index');
+    Route::get('notas-credito-venta/crear', [NotaCreditoVentaController::class, 'create'])->name('notas-credito-venta.create');
+    Route::get('notas-credito-venta/datos-venta/{venta}', [NotaCreditoVentaController::class, 'datosVenta'])->name('notas-credito-venta.datosVenta');
+    Route::post('notas-credito-venta', [NotaCreditoVentaController::class, 'store'])->name('notas-credito-venta.store');
+    Route::get('notas-credito-venta/{notasCreditoVentum}', [NotaCreditoVentaController::class, 'show'])->name('notas-credito-venta.show');
+    Route::get('ventas/{venta}/factura-imprimir', [VentaController::class, 'imprimirFactura'])->name('ventas.factura.imprimir');
+    Route::get('ventas/{venta}/remito-imprimir', [VentaController::class, 'imprimirRemito'])->name('ventas.remito.imprimir');
+    Route::get('notas-credito-compra', [NotaCreditoCompraController::class, 'index'])->name('notas-credito-compra.index');
+    Route::get('notas-credito-compra/crear', [NotaCreditoCompraController::class, 'create'])->name('notas-credito-compra.create');
+    Route::get('notas-credito-compra/datos-compra/{compra}', [NotaCreditoCompraController::class, 'datosCompra'])->name('notas-credito-compra.datosCompra');
+    Route::post('notas-credito-compra', [NotaCreditoCompraController::class, 'store'])->name('notas-credito-compra.store');
+    Route::get('notas-credito-compra/{notasCreditoComprum}', [NotaCreditoCompraController::class, 'show'])->name('notas-credito-compra.show');
+Route::get('compras/{compra}/remito-imprimir', [CompraController::class, 'imprimirRemito'])->name('compras.remito.imprimir');
 });
 
 require __DIR__.'/auth.php';

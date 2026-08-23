@@ -206,4 +206,20 @@ class VentaController extends Controller
         $precios = PrecioProducto::where('id_lista_precio', $idLista)->pluck('precio_venta', 'id_producto');
         return response()->json($precios);
     }
+        public function imprimirFactura(Venta $venta)
+    {
+        $venta->load(['cliente', 'sucursal.empresa', 'detalles.producto', 'factura.tipoComprobante']);
+
+        if (!$venta->factura) {
+            return back()->with('error', 'Esta venta no tiene factura emitida.');
+        }
+
+        return view('ventas.factura-imprimir', compact('venta'));
+    }
+
+    public function imprimirRemito(Venta $venta)
+    {
+        $venta->load(['cliente', 'sucursal.empresa', 'detalles.producto']);
+        return view('ventas.remito-imprimir', compact('venta'));
+    }
 }

@@ -3,9 +3,19 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h3 class="mb-0"><i class="bi bi-receipt-cutoff me-2"></i>Venta #{{ $venta->id_venta }}</h3>
-    <a href="{{ route('ventas.index') }}" class="btn btn-outline-secondary">
-        <i class="bi bi-arrow-left me-1"></i> Volver
-    </a>
+    <div class="d-flex gap-2">
+        <a href="{{ route('ventas.remito.imprimir', $venta) }}" target="_blank" class="btn btn-outline-secondary">
+            <i class="bi bi-file-earmark-text me-1"></i> Remito
+        </a>
+        @if($venta->factura)
+        <a href="{{ route('ventas.factura.imprimir', $venta) }}" target="_blank" class="btn btn-outline-primary">
+            <i class="bi bi-file-earmark-pdf me-1"></i> Factura
+        </a>
+        @endif
+        <a href="{{ route('ventas.index') }}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Volver
+        </a>
+    </div>
 </div>
 
 <div class="row g-3 mb-3">

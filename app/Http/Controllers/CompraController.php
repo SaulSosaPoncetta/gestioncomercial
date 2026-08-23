@@ -132,4 +132,9 @@ class CompraController extends Controller
         $compra->load(['proveedor', 'sucursal', 'detalles.producto', 'cuentaPorPagar']);
         return view('compras.show', compact('compra'));
     }
+        public function imprimirRemito(Compra $compra)
+    {
+        $compra->load(['proveedor', 'sucursal.empresa', 'detalles.producto']);
+        return view('compras.remito-imprimir', compact('compra'));
+    }
 }
