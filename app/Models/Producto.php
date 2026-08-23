@@ -47,4 +47,13 @@ class Producto extends Model
     {
         return $this->belongsTo(Impuesto::class, 'id_impuesto', 'id_impuesto');
     }
+        public function detalleVentas()
+    {
+        return $this->hasMany(DetalleVenta::class, 'id_producto', 'id_producto');
+    }
+
+    public function detalleCompras()
+    {
+        return $this->hasMany(DetalleCompra::class, 'id_producto', 'id_producto');
+    }
 }

@@ -7,6 +7,25 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <style>
+    .bg-primary { background-color: #14532d !important; }
+    .btn-primary {
+        background-color: #14532d;
+        border-color: #14532d;
+    }
+    .btn-primary:hover,
+    .btn-primary:focus,
+    .btn-primary:active {
+        background-color: #1e6b3a !important;
+        border-color: #1e6b3a !important;
+    }
+    a { color: #14532d; }
+    a:hover { color: #1e6b3a; }
+    .form-control:focus, .form-select:focus {
+        border-color: #14532d;
+        box-shadow: 0 0 0 0.25rem rgba(20, 83, 45, 0.15);
+    }
+</style>
     @if($captchaActivo)
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     @endif
