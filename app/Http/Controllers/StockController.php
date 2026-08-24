@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\ExportaExcel;
 use App\Models\Almacen;
 use App\Models\MovimientoInventario;
 use App\Models\Producto;
@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 
 class StockController extends Controller
 {
+    use ExportaExcel;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -37,6 +39,39 @@ class StockController extends Controller
         return view('stock.index', compact('stock', 'almacenes'));
     }
 
+        public function exportar(Request $request)
+    {
+        $query = Stock::with(['producto', 'almacen']);
+
+        if ($request->filled('id_almacen')) {
+            $query->where('id_almacen', $request->input('id_almacen'));
+        }
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->input('buscar');
+            $query->whereHas('producto', function ($q) use ($buscar) {
+                $q->where('nombre', 'like', "%{$buscar}%")->orWhere('sku', 'like', "%{$buscar}%");
+            });
+        }
+
+        $stock = $query->orderBy('id_producto')->get();
+
+        $encabezados = ['SKU', 'Producto', 'Almacén', 'Cantidad', 'Stock Mínimo', 'Alerta'];
+
+        $filas = $stock->map(function ($item) {
+            $bajoMinimo = $item->producto && $item->cantidad <= $item->producto->stock_minimo;
+            return [
+                $item->producto->sku ?? '',
+                $item->producto->nombre ?? '',
+                $item->almacen->nombre ?? '',
+                rtrim(rtrim(number_format($item->cantidad, 3, '.', ''), '0'), '.'),
+                $item->producto->stock_minimo ?? 0,
+                $bajoMinimo ? 'BAJO MÍNIMO' : 'OK',
+            ];
+        });
+
+        return $this->exportarExcel('stock_' . now()->format('Y-m-d'), $encabezados, $filas);
+    }
     public function ajustar()
     {
         $productos = Producto::where('estado', true)->where('aplica_inventario', true)->orderBy('nombre')->get();

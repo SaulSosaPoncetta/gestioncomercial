@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\ExportaExcel;
 use App\Models\Almacen;
 use App\Models\Compra;
 use App\Models\CuentaPorPagar;
@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\DB;
 
 class CompraController extends Controller
 {
+    use ExportaExcel;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -33,6 +35,35 @@ class CompraController extends Controller
 
         $compras = $query->orderByDesc('fecha_recepcion')->paginate(10)->withQueryString();
         return view('compras.index', compact('compras'));
+    }
+
+        public function exportar(Request $request)
+    {
+        $query = Compra::with(['proveedor', 'sucursal']);
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->input('buscar');
+            $query->where('numero_comprobante', 'like', "%{$buscar}%")
+                ->orWhereHas('proveedor', fn($q) => $q->where('razon_social_nombre', 'like', "%{$buscar}%"));
+        }
+
+        $compras = $query->orderByDesc('fecha_recepcion')->get();
+
+        $encabezados = ['Fecha', 'Comprobante', 'Proveedor', 'Sucursal', 'Condición', 'Subtotal', 'Impuestos', 'Total', 'Estado'];
+
+        $filas = $compras->map(fn($c) => [
+            $c->fecha_emision->format('d/m/Y'),
+            $c->tipo_comprobante . ' ' . $c->numero_comprobante,
+            $c->proveedor->razon_social_nombre ?? '',
+            $c->sucursal->nombre ?? '',
+            $c->condicion_pago,
+            number_format($c->subtotal, 2),
+            number_format($c->total_impuestos, 2),
+            number_format($c->total_compra, 2),
+            $c->estado,
+        ]);
+
+        return $this->exportarExcel('compras_' . now()->format('Y-m-d'), $encabezados, $filas);
     }
 
     public function create()

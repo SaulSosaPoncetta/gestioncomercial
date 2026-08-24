@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\ExportaExcel;
 use App\Models\Categoria;
 use App\Models\Impuesto;
 use App\Models\Marca;
@@ -10,6 +11,8 @@ use Illuminate\Http\Request;
 
 class ProductoController extends Controller
 {
+    use ExportaExcel;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -30,6 +33,47 @@ class ProductoController extends Controller
 
         $productos = $query->orderBy('nombre')->paginate(10)->withQueryString();
         return view('productos.index', compact('productos'));
+    }
+
+        public function exportar(Request $request)
+    {
+        $query = Producto::with(['categoria', 'marca', 'impuesto']);
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->input('buscar');
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'like', "%{$buscar}%")
+                    ->orWhere('sku', 'like', "%{$buscar}%")
+                    ->orWhere('codigo_barras', 'like', "%{$buscar}%");
+            });
+        }
+
+        $productos = $query->orderBy('nombre')->get();
+
+        $puedeVerCostos = auth()->user()->can('ver-costos');
+
+        $encabezados = ['SKU', 'Nombre', 'Categoría', 'Marca', 'Impuesto'];
+        if ($puedeVerCostos) {
+            $encabezados[] = 'Costo';
+        }
+        $encabezados[] = 'Estado';
+
+        $filas = $productos->map(function ($p) use ($puedeVerCostos) {
+            $fila = [
+                $p->sku,
+                $p->nombre,
+                $p->categoria->nombre ?? '',
+                $p->marca->nombre ?? '',
+                $p->impuesto->nombre ?? '',
+            ];
+            if ($puedeVerCostos) {
+                $fila[] = number_format($p->precio_costo, 2);
+            }
+            $fila[] = $p->estado ? 'Activo' : 'Inactivo';
+            return $fila;
+        });
+
+        return $this->exportarExcel('productos_' . now()->format('Y-m-d'), $encabezados, $filas);
     }
 
     public function create()

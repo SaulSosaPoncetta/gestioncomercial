@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Traits\ExportaExcel;
 use App\Models\Almacen;
 use App\Models\CuentaPorCobrar;
 use App\Models\DetalleVenta;
@@ -21,6 +21,8 @@ use Illuminate\Validation\ValidationException;
 
 class VentaController extends Controller
 {
+    use ExportaExcel;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -37,6 +39,34 @@ class VentaController extends Controller
 
         $ventas = $query->orderByDesc('fecha_venta')->paginate(10)->withQueryString();
         return view('ventas.index', compact('ventas'));
+    }
+
+        public function exportar(Request $request)
+    {
+        $query = Venta::with(['cliente', 'sucursal', 'vendedor']);
+
+        if ($request->filled('buscar')) {
+            $buscar = $request->input('buscar');
+            $query->whereHas('cliente', fn($q) => $q->where('razon_social_nombre', 'like', "%{$buscar}%"));
+        }
+
+        $ventas = $query->orderByDesc('fecha_venta')->get();
+
+        $encabezados = ['Fecha', 'Cliente', 'Vendedor', 'Condición', 'Subtotal', 'Descuento', 'Impuesto', 'Total', 'Estado'];
+
+        $filas = $ventas->map(fn($v) => [
+            $v->fecha_venta->format('d/m/Y H:i'),
+            $v->cliente->razon_social_nombre ?? '',
+            $v->vendedor->name ?? '',
+            $v->tipo_venta,
+            number_format($v->subtotal, 2),
+            number_format($v->descuento_total, 2),
+            number_format($v->impuesto_total, 2),
+            number_format($v->total_venta, 2),
+            $v->estado,
+        ]);
+
+        return $this->exportarExcel('ventas_' . now()->format('Y-m-d'), $encabezados, $filas);
     }
 
     public function create()
