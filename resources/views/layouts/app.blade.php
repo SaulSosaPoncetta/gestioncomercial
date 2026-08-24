@@ -154,6 +154,12 @@
                     <i class="bi bi-boxes"></i><span class="link-label ms-2">Stock</span>
                 </a>
             @endif
+            @if (Route::has('transferencias.index'))
+                <a class="nav-link {{ request()->is('transferencias*') ? 'active' : '' }}"
+                    href="{{ route('transferencias.index') }}" title="Transferencias">
+                    <i class="bi bi-arrow-left-right"></i><span class="link-label ms-2">Transferencias</span>
+                </a>
+            @endif
 
             <div class="nav-header">Compras y Ventas</div>
             @if (Route::has('compras.index'))

@@ -17,6 +17,8 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\CajaChicaController;
 use App\Http\Controllers\NotaCreditoVentaController;
 use App\Http\Controllers\NotaCreditoCompraController;
+use App\Http\Controllers\TransferenciaController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -75,7 +77,17 @@ Route::middleware('permission:gestionar-configuracion')->group(function () {
     Route::get('notas-credito-compra/datos-compra/{compra}', [NotaCreditoCompraController::class, 'datosCompra'])->name('notas-credito-compra.datosCompra');
     Route::post('notas-credito-compra', [NotaCreditoCompraController::class, 'store'])->name('notas-credito-compra.store');
     Route::get('notas-credito-compra/{notasCreditoComprum}', [NotaCreditoCompraController::class, 'show'])->name('notas-credito-compra.show');
-Route::get('compras/{compra}/remito-imprimir', [CompraController::class, 'imprimirRemito'])->name('compras.remito.imprimir');
-});
+    Route::get('compras/{compra}/remito-imprimir', [CompraController::class, 'imprimirRemito'])->name('compras.remito.imprimir');
+    Route::get('transferencias', [TransferenciaController::class, 'index'])->name('transferencias.index');
+    Route::get('transferencias/pendientes', [TransferenciaController::class, 'pendientes'])->name('transferencias.pendientes');
+    Route::get('transferencias/crear', [TransferenciaController::class, 'create'])->name('transferencias.create');
+    Route::get('transferencias-ajax/stock-por-almacen', [TransferenciaController::class, 'stockPorAlmacen'])->name('transferencias.stockPorAlmacen');
+    Route::post('transferencias', [TransferenciaController::class, 'store'])->name('transferencias.store');
+    Route::get('transferencias/{transferencia}', [TransferenciaController::class, 'show'])->name('transferencias.show');
+    Route::get('transferencias/{transferencia}/recibir', [TransferenciaController::class, 'recibir'])->name('transferencias.recibir');
+    Route::post('transferencias/{transferencia}/recibir', [TransferenciaController::class, 'guardarRecepcion'])->name('transferencias.guardarRecepcion');
+    Route::get('transferencias/{transferencia}/remito-imprimir', [TransferenciaController::class, 'imprimirRemito'])->name('transferencias.remito.imprimir');
+
+    });
 
 require __DIR__.'/auth.php';
