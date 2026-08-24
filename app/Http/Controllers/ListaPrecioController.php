@@ -58,6 +58,7 @@ class ListaPrecioController extends Controller
 
     public function destroy(ListaPrecio $listasPrecio)
     {
+        $this->authorize('eliminar-registros');
         $listasPrecio->delete();
         return redirect()->route('listas-precios.index')->with('success', 'Lista de precios eliminada correctamente.');
     }

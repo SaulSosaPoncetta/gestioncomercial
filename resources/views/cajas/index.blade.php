@@ -44,6 +44,7 @@
                         <a href="{{ route('cajas.edit', $caja) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('cajas.destroy', $caja) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta caja?');">
                             @csrf
@@ -52,6 +53,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

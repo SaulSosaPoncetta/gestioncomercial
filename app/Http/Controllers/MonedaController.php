@@ -56,6 +56,7 @@ class MonedaController extends Controller
 
     public function destroy(Moneda $moneda)
     {
+        $this->authorize('eliminar-registros');
         $moneda->delete();
         return redirect()->route('monedas.index')->with('success', 'Moneda eliminada correctamente.');
     }

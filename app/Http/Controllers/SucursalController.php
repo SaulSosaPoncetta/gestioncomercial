@@ -51,6 +51,7 @@ class SucursalController extends Controller
 
     public function destroy(Sucursal $sucursale)
     {
+        $this->authorize('eliminar-registros');
         $sucursale->delete();
         return redirect()->route('sucursales.index')->with('success', 'Sucursal eliminada correctamente.');
     }

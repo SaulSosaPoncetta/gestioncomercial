@@ -38,6 +38,7 @@
                         <a href="{{ route('listas-precios.edit', $lista) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('listas-precios.destroy', $lista) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta lista de precios?');">
                             @csrf
@@ -46,6 +47,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

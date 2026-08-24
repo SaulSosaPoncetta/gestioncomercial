@@ -48,6 +48,7 @@ class CategoriaController extends Controller
 
     public function destroy(Categoria $categoria)
     {
+        $this->authorize('eliminar-registros');
         if ($categoria->subcategorias()->exists()) {
             return back()->with('error', 'No se puede eliminar: tiene subcategorías asociadas.');
         }

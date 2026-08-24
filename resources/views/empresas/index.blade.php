@@ -31,6 +31,7 @@
                         <a href="{{ route('empresas.edit', $empresa) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('empresas.destroy', $empresa) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta empresa?');">
                             @csrf
@@ -39,6 +40,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

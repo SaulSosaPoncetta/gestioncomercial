@@ -76,6 +76,7 @@
                         <a href="{{ route('personas.edit', $persona) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('personas.destroy', $persona) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta persona?');">
                             @csrf
@@ -84,6 +85,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

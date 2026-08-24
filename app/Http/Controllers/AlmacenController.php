@@ -49,6 +49,7 @@ class AlmacenController extends Controller
 
     public function destroy(Almacen $almacen)
     {
+        $this->authorize('eliminar-registros');
         $almacen->delete();
         return redirect()->route('almacenes.index')->with('success', 'Almacén eliminado correctamente.');
     }

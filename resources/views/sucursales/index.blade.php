@@ -45,6 +45,7 @@
                         <a href="{{ route('sucursales.edit', $sucursal) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('sucursales.destroy', $sucursal) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta sucursal?');">
                             @csrf
@@ -53,6 +54,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty

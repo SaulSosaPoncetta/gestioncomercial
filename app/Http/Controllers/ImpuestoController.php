@@ -58,6 +58,7 @@ class ImpuestoController extends Controller
 
     public function destroy(Impuesto $impuesto)
     {
+        $this->authorize('eliminar-registros');
         $impuesto->delete();
         return redirect()->route('impuestos.index')->with('success', 'Impuesto eliminado correctamente.');
     }

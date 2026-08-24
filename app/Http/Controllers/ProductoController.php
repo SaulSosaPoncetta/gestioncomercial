@@ -68,6 +68,7 @@ class ProductoController extends Controller
 
     public function destroy(Producto $producto)
     {
+        $this->authorize('eliminar-registros');
         $producto->delete();
         return redirect()->route('productos.index')->with('success', 'Producto eliminado correctamente.');
     }

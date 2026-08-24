@@ -46,6 +46,7 @@ class MarcaController extends Controller
 
     public function destroy(Marca $marca)
     {
+        $this->authorize('eliminar-registros');
         $marca->delete();
         return redirect()->route('marcas.index')->with('success', 'Marca eliminada correctamente.');
     }

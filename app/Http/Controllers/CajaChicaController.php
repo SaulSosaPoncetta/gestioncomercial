@@ -52,6 +52,7 @@ class CajaChicaController extends Controller
 
     public function destroy(CajaChica $caja)
     {
+        $this->authorize('eliminar-registros');
         if ($caja->sesionAbierta()->exists()) {
             return back()->with('error', 'No se puede eliminar: la caja tiene una sesión abierta.');
         }

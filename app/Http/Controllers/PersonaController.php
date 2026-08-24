@@ -60,6 +60,7 @@ class PersonaController extends Controller
 
     public function destroy(Persona $persona)
     {
+        $this->authorize('eliminar-registros');
         $persona->delete();
         return redirect()->route('personas.index')->with('success', 'Persona eliminada correctamente.');
     }

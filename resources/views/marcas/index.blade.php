@@ -33,6 +33,7 @@
                         <a href="{{ route('marcas.edit', $marca) }}" class="btn btn-sm btn-outline-secondary">
                             <i class="bi bi-pencil"></i>
                         </a>
+                        @can('eliminar-registros')
                         <form action="{{ route('marcas.destroy', $marca) }}" method="POST" class="d-inline"
                               onsubmit="return confirm('¿Eliminar esta marca?');">
                             @csrf
@@ -41,6 +42,7 @@
                                 <i class="bi bi-trash"></i>
                             </button>
                         </form>
+                        @endcan
                     </td>
                 </tr>
                 @empty
