@@ -19,9 +19,8 @@ use App\Http\Controllers\NotaCreditoVentaController;
 use App\Http\Controllers\NotaCreditoCompraController;
 use App\Http\Controllers\TransferenciaController;
 
-
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Auth::routes();
@@ -93,5 +92,9 @@ Route::middleware('permission:gestionar-configuracion')->group(function () {
     Route::get('transferencias/{transferencia}/remito-imprimir', [TransferenciaController::class, 'imprimirRemito'])->name('transferencias.remito.imprimir');
 
     });
+
+// Webhook del hub central (MiGestión Panel) avisando cambios de estado de pago
+Route::post('/webhooks/estado-cliente', \App\Http\Controllers\WebhookEstadoClienteController::class)
+    ->name('webhooks.estado-cliente');
 
 require __DIR__.'/auth.php';
