@@ -17,10 +17,23 @@ class Empresa extends Model
         'direccion',
         'telefono',
         'email',
+        'estado',
+        'estado_pago',
+        'fecha_verificacion_pago',
+    ];
+
+    protected $casts = [
+        'estado' => 'boolean',
+        'fecha_verificacion_pago' => 'datetime',
     ];
 
     public function sucursales()
     {
         return $this->hasMany(Sucursal::class, 'id_empresa', 'id_empresa');
+    }
+
+    public function alDiaConElPago(): bool
+    {
+        return in_array($this->estado_pago, ['activa', 'sin_verificar'], true);
     }
 }
