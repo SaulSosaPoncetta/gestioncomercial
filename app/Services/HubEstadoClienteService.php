@@ -60,4 +60,34 @@ class HubEstadoClienteService
 
         return $empresa;
     }
+    /**
+     * Da de alta la empresa en el hub apenas el admin activa su cuenta,
+     * para que quede bajo control del hub sin carga manual.
+     */
+    public function registrar(Empresa $empresa, ?string $plan = null, ?float $monto = null): void
+    {
+        if (! config('migestion_hub.url') || ! config('migestion_hub.api_key')) {
+            return;
+        }
+
+        try {
+            Http::withHeaders(['X-Api-Key' => config('migestion_hub.api_key')])
+                ->timeout(8)
+                ->post(rtrim(config('migestion_hub.url'), '/').'/api/registrar-cliente', [
+                    'referencia_externa' => (string) $empresa->id_empresa,
+                    'nombre' => $empresa->razon_social,
+                    'email' => $empresa->email,
+                    'telefono' => $empresa->telefono,
+                    'plan' => $plan,
+                    'monto' => $monto,
+                    'tipo' => 'recurrente',
+                ])
+                ->throw();
+        } catch (\Throwable $e) {
+            Log::warning('No se pudo registrar la empresa en el hub', [
+                'id_empresa' => $empresa->id_empresa,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
 }

@@ -10,17 +10,23 @@ class Empresa extends Model
     protected $primaryKey = 'id_empresa';
     public $timestamps = false;
 
-    protected $fillable = [
+        protected $fillable = [
         'razon_social',
         'nombre_fantasia',
         'identificacion_fiscal',
         'direccion',
         'telefono',
         'email',
+        'plan_id',
         'estado',
         'estado_pago',
         'fecha_verificacion_pago',
     ];
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
+    }
 
     protected $casts = [
         'estado' => 'boolean',
