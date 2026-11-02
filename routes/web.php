@@ -19,9 +19,8 @@ use App\Http\Controllers\NotaCreditoVentaController;
 use App\Http\Controllers\NotaCreditoCompraController;
 use App\Http\Controllers\TransferenciaController;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Página de inicio pública: la landing (si ya hay sesión, va directo al sistema)
+Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing.index');
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('dashboard');
@@ -96,7 +95,7 @@ Route::middleware('permission:gestionar-configuracion')->group(function () {
 Route::post('/webhooks/estado-cliente', \App\Http\Controllers\WebhookEstadoClienteController::class)
     ->name('webhooks.estado-cliente');
 // Landing pública de Gestión Comercial
-Route::get('/landing', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing.index');
+Route::get('/landing', fn () => redirect()->route('landing.index')); // compatibilidad con el enlace anterior
 Route::post('/landing/registrar', [\App\Http\Controllers\LandingController::class, 'registrar'])->name('landing.registrar');
 Route::get('/activar/{token}', [\App\Http\Controllers\LandingController::class, 'activar'])->name('landing.activar');
 require __DIR__.'/auth.php';

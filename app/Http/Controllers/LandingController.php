@@ -18,8 +18,13 @@ use Illuminate\Validation\ValidationException;
 
 class LandingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Si ya está logueado, va directo al sistema
+        if ($request->user()) {
+            return redirect()->route('dashboard');
+        }
+
         $planes = Plan::where('activo', true)->orderBy('precio')->get();
 
         return view('landing.index', compact('planes'));
